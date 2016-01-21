@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Keyboard>
+    <Row>
+        <Key labels = "a|à@1" ratio = "1"/>
+        <Key labels = "z|2" ratio = "1"/>
+        <Key labels = "e|éèê3" ratio = "1"/>
+        <Key labels = "r|4" ratio = "1"/>
+        <Key labels = "t|5" ratio = "1"/>
+        <Key labels = "y|6" ratio = "1"/>
+        <Key labels = "u|ùû7" ratio = "1"/>
+        <Key labels = "i|ï8" ratio = "1"/>
+        <Key labels = "o|9" ratio = "1"/>
+        <Key labels = "p|0" ratio = "1"/>
+    </Row>
+    <Row>
+        <Key labels = "q|%`~" ratio = "1"/>
+        <Key labels = "s|^|" ratio = "1"/>
+        <Key labels = "d|*\" ratio = "1"/>
+        <Key labels = "f|{+" ratio = "1"/>
+        <Key labels = "g|}-" ratio = "1"/>
+        <Key labels = "h|[=" ratio = "1"/>
+        <Key labels = "j|]_" ratio = "1"/>
+        <Key labels = "k|()" ratio = "1"/>
+        <Key labels = "l|&apos;&quot;" ratio = "1"/>
+        <Key labels = "m|?" ratio = "1"/>
+    </Row>
+    <Row>
+        <Key labels = "⇑!shift" ratio = "1.5" checkable = "true"/>
+        <Key labels = "z|€" ratio = "1"/>
+        <Key labels = "x|$" ratio = "1"/>
+        <Key labels = "c|ç!" ratio = "1"/>
+        <Key labels = "v|;" ratio = "1"/>
+        <Key labels = "b|:" ratio = "1"/>
+        <Key labels = "n|&lt;" ratio = "1"/>
+        <Key labels = "'|&gt;" ratio = "1"/>
+        <Key labels = "⌫!backspace" ratio = "1.5"/>
+    </Row>
+    <Row>
+        <Key labels = "123!source:keyboard_num.xml" ratio = "1.5"/>
+        <Key labels = "fr!source:keyboard_us.xml" ratio = "1"/>
+        <Key labels = " |" ratio = "5"/>
+        <Key labels = ".|," ratio = "1"/>
+        <Key labels = "↵!enter" ratio = "1.5"/>
+    </Row>
+</Keyboard>

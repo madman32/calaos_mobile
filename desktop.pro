@@ -68,3 +68,10 @@ OTHER_FILES += \
     qml/BackgroundDesktop.qml \
     qml/MainMenu.qml \
     qml/MainMenuButton.qml
+
+DISTFILES += \
+    qml/Keyboard.qml \
+    qml/KeyboardItem.qml \
+    qml/keyboard_fr.xml \
+    qml/keyboard_num.xml \
+    qml/Key.qml

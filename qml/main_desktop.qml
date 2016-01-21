@@ -79,4 +79,10 @@ Window {
             model: homeModel
         }
     }
+
+    Keyboard {
+        id: keyBoard
+        visible: true
+    }
+
 }

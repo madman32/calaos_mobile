@@ -9,5 +9,10 @@
         <file>qml/MainMenuButtonDesktop.qml</file>
         <file>qml/DesktopView.qml</file>
         <file>qml/DesktopHomeView.qml</file>
+        <file>qml/Key.qml</file>
+        <file>qml/keyboard_fr.xml</file>
+        <file>qml/keyboard_num.xml</file>
+        <file>qml/Keyboard.qml</file>
+        <file>qml/KeyboardItem.qml</file>
     </qresource>
 </RCC>
