@@ -256,6 +256,9 @@ void IOBase::load(const QVariantMap &io)
         else
             update_rgbColor(QColor(ioData["state"].toString()));
     }
+    
+    if (ioData["gui_type"] == "analog_in")
+        update_guiStyle(ioData["gui_style"].toString());
 
     //force rw for analog_out to let us use the same qml than var_int
     if (m_ioType == Common::AnalogOut)

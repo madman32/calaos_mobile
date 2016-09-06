@@ -28,5 +28,6 @@
         <file>qml/SharedComponents/CalaosRadio.qml</file>
         <file>qml/SharedComponents/CalaosRadioStyle.qml</file>
         <file>qml/SharedComponents/Theme.qml</file>
+        <file>qml/SharedComponents/IOAnalogIn.qml</file>
     </qresource>
 </RCC>

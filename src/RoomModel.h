@@ -92,6 +92,7 @@ public:
         RoleHits,
         RoleName,
         RoleId,
+        RoleGuiStyle,
         RoleUnit,
         RoleRW,
         RoleRoomName
@@ -131,6 +132,7 @@ class IOBase: public QObject, public QStandardItem
     QML_READONLY_PROPERTY_MODEL(int, ioHits, RoomModel::RoleHits)
     QML_READONLY_PROPERTY_MODEL(QString, ioName, RoomModel::RoleName)
     QML_READONLY_PROPERTY_MODEL(QString, ioId, RoomModel::RoleId)
+    QML_READONLY_PROPERTY_MODEL(QString, guiStyle, RoomModel::RoleGuiStyle)
 
     QML_READONLY_PROPERTY_MODEL(QString, unit, RoomModel::RoleUnit)
     QML_READONLY_PROPERTY_MODEL(bool, rw, RoomModel::RoleRW)

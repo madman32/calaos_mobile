@@ -64,7 +64,7 @@ ListView {
             sourceComponent: model.ioType === Common.Light? light:
                              model.ioType === Common.Temp? temp:
                              model.ioType === Common.VarInt? var_int:
-                             model.ioType === Common.AnalogIn? var_int:
+                             model.ioType === Common.AnalogIn? analog_in:
                              model.ioType === Common.AnalogOut? var_int:
                              model.ioType === Common.VarBool? var_bool:
                              model.ioType === Common.VarString? var_string:
@@ -128,4 +128,5 @@ ListView {
     Component { id: light_rgb; IOLightRGB {} }
     Component { id: shutter_smart; IOShutterSmart {} }
     Component { id: fav_all_lights; IOFavAllLights {} }
+    Component { id: analog_in; IOAnalogIn {} }
 }
