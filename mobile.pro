@@ -4,6 +4,8 @@ TEMPLATE = app
 
 DEFINES += CALAOS_MOBILE
 
+QT_QPA_PLATFORM = eglfs
+
 TARGET=CalaosHome
 
 QT += qml quick network gui websockets svg
