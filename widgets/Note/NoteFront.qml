@@ -54,7 +54,7 @@ Item {
                     id: noteTxt
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     width: flickable.width
-                    font { family: calaosFont.fontFamily; weight: Font.ExtraLight; pixelSize: Units.dp(12) }
+                    font { family: calaosFont.fontFamily; weight: Font.ExtraLight; pixelSize: Units.dp(32) }
                 }
             }
 
@@ -70,8 +70,8 @@ Item {
             top: parent.top; topMargin: Units.dp(24)
             left: parent.left; leftMargin: Units.dp(44)
         }
-        width: Units.dp(18)
-        height: Units.dp(18)
+        width: Units.dp(36)
+        height: Units.dp(36)
         opacity: 0.65
 
         MouseArea {

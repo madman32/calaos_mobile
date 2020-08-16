@@ -5,6 +5,8 @@
         <file>widgets/Clock/clock_hour.png</file>
         <file>widgets/Clock/clock_min.png</file>
         <file>widgets/Clock/clock_sec.png</file>
+        <file>widgets/DigitalClock/DigitalClock.qml</file>
+        <file>widgets/DigitalClock/widget_lcd_clock_back.png</file>
         <file>widgets/Weather/cloud01.png</file>
         <file>widgets/Weather/cloud02.png</file>
         <file>widgets/Weather/cloud03.png</file>
