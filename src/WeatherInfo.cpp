@@ -29,9 +29,38 @@ static void forecastClear(QQmlListProperty<WeatherData> *prop)
     static_cast<WeatherModel*>(prop->data)->forecastDataClear();
 }
 
+static void forecast24Append(QQmlListProperty<WeatherData> *prop, WeatherData *val)
+{
+    Q_UNUSED(val);
+    Q_UNUSED(prop);
+}
+
+static WeatherData *forecast24At(QQmlListProperty<WeatherData> *prop, int index)
+{
+    WeatherModel *m = static_cast<WeatherModel*>(prop->data);
+    return m->getForecast24Data(index);
+}
+
+static int forecast24Count(QQmlListProperty<WeatherData> *prop)
+{
+    WeatherModel *m = static_cast<WeatherModel*>(prop->data);
+    return m->getForecast24Count();
+}
+
+static void forecast24Clear(QQmlListProperty<WeatherData> *prop)
+{
+    static_cast<WeatherModel*>(prop->data)->forecast24DataClear();
+}
+
 WeatherModel::WeatherModel(QObject *parent):
     QObject(parent)
 {
+    for (size_t ct = 0 ; ct < 24; ct++)
+    {
+        WeatherData *wd = new WeatherData;
+        dataForecastHourly.append(wd);
+    }
+    
     accessManager = new QNetworkAccessManager(this);
     qdataForecast = new QQmlListProperty<WeatherData>(this,
                                                       this,
@@ -39,6 +68,12 @@ WeatherModel::WeatherModel(QObject *parent):
                                                       forecastCount,
                                                       forecastAt,
                                                       forecastClear);
+    qdataForecastHourly = new QQmlListProperty<WeatherData>(this,
+                                                      this,
+                                                      forecast24Append,
+                                                      forecast24Count,
+                                                      forecast24At,
+                                                      forecast24Clear);
     QQmlEngine::setObjectOwnership(&dataNow, QQmlEngine::CppOwnership);
     update_weather(&dataNow);
 }
@@ -48,6 +83,9 @@ WeatherModel::~WeatherModel()
     for (int i = 0;i < dataForecast.count();i++)
         delete dataForecast.at(i);
     dataForecast.clear();
+    for (int i = 0;i < dataForecastHourly.count();i++)
+        delete dataForecastHourly.at(i);
+    dataForecastHourly.clear();
 }
 
 void WeatherModel::refreshWeather()
@@ -89,6 +127,50 @@ void WeatherModel::handleWeatherNetworkData()
         qWarning() << "Error in weather request " << reply->url() << ": " << reply->errorString();
     }
 
+    QUrl url("https://api.openweathermap.org/data/2.5/onecall?");
+    QUrlQuery query;
+    query.addQueryItem("lat", HardwareUtils::Instance()->getConfigOption("latitude"));
+    query.addQueryItem("lon", HardwareUtils::Instance()->getConfigOption("longitude"));
+    query.addQueryItem("exclude", "current,minutely,daily");
+    query.addQueryItem("appid", OWM_KEY);
+    url.setQuery(query);
+
+    QNetworkReply *rep = accessManager->get(QNetworkRequest(url));
+
+    connect(rep, SIGNAL(finished()),
+            this, SLOT(handleForecastHourlyNetworkData()));
+}
+
+void WeatherModel::handleForecastHourlyNetworkData()
+{
+    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+    if (!reply)
+        return;
+
+    if (!reply->error())
+    {
+        QJsonDocument jdoc = QJsonDocument::fromJson(reply->readAll());
+
+        if (jdoc.isObject())
+        {
+            QJsonObject obj = jdoc.object();
+            QJsonArray jfc = obj["hourly"].toArray();
+            // API Should show 96 hours of data by default but we only want to show the next 24 hours in 3 hour segments
+            if (jfc.count() >= 24)
+            {
+                for (int i = 0; i < 24; i++)
+                {
+                    WeatherData *wd = dataForecastHourly.at(i);
+                    wd->setWeatherForecastData(jfc.at(i).toObject());
+                }
+            }
+        }
+    }
+    else
+    {
+        qWarning() << "Error in weather request " << reply->url() << ": " << reply->errorString();
+    }
+
     QUrl url("http://api.openweathermap.org/data/2.5/forecast/daily");
     QUrlQuery query;
     query.addQueryItem("lat", HardwareUtils::Instance()->getConfigOption("latitude"));
@@ -101,10 +183,9 @@ void WeatherModel::handleWeatherNetworkData()
     QNetworkReply *rep = accessManager->get(QNetworkRequest(url));
 
     connect(rep, SIGNAL(finished()),
-            this, SLOT(handleForecastNetworkData()));
-}
-
-void WeatherModel::handleForecastNetworkData()
+            this, SLOT(handleForecastWeekNetworkData()));
+};
+void WeatherModel::handleForecastWeekNetworkData()
 {
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
     if (!reply)
@@ -168,6 +249,7 @@ WeatherData::WeatherData():
     update_weatherDescription("--");
     update_weatherIcon("");
     update_weatherText("--");
+    update_timestamp("--");
 
 //    //Sample data
 //    update_dayOfWeek("Lundi");
@@ -211,6 +293,30 @@ void WeatherData::setWeatherData(const QJsonObject &obj)
     update_humidity(tobj["humidity"].toString());
 
     update_isNight(get_weatherIcon().endsWith('n'));
+    update_timestamp(obj["dt"].toString());
+}
+
+void WeatherData::setWeatherForecastData(const QJsonObject &obj)
+{
+    QDateTime dt = QDateTime::fromMSecsSinceEpoch((quint64)obj["dt"].toDouble() * 1000);
+    update_dayOfWeek(dt.date().toString("ddd"));
+
+    QJsonArray jarr = obj["weather"].toArray();
+    if (jarr.count() > 0)
+    {
+        QJsonObject jw = jarr.at(0).toObject();
+        update_weatherIcon(jw["icon"].toString());
+        update_weatherCode(jw["id"].toInt());
+        update_weatherText(jw["main"].toString());
+        update_weatherDescription(jw["description"].toString());
+    }
+
+    update_temperature(convertTemp(obj["temp"].toDouble()));
+    update_pressure(QString::number(obj["pressure"].toDouble()));
+    update_humidity(QString::number(obj["humidity"].toDouble()));
+
+    update_isNight(get_weatherIcon().endsWith('n'));
+    update_timestamp(dt.toString("hh:mm"));
 }
 
 WeatherData *WeatherModel::getForecastData(int i)
@@ -233,6 +339,28 @@ void WeatherModel::forecastDataClear()
 QQmlListProperty<WeatherData> WeatherModel::getForecast()
 {
     return *qdataForecast;
+}
+
+WeatherData *WeatherModel::getForecast24Data(int i)
+{
+    WeatherData *w = dataForecastHourly.at(i);
+    QQmlEngine::setObjectOwnership(w, QQmlEngine::CppOwnership);
+    return w;
+}
+
+int WeatherModel::getForecast24Count()
+{
+    return dataForecastHourly.count();
+}
+
+void WeatherModel::forecast24DataClear()
+{
+    dataForecastHourly.clear();
+}
+
+QQmlListProperty<WeatherData> WeatherModel::getForecast24()
+{
+    return *qdataForecastHourly;
 }
 
 void WeatherModel::registerQmlClasses()

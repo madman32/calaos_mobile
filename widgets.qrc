@@ -36,5 +36,31 @@
         <file>widgets/Note/NoteFront.qml</file>
         <file>widgets/Note/NoteBack.qml</file>
         <file>widgets/Note/shadow.png</file>
+        <file>widgets/WeatherStrip/Arrow.qml</file>
+        <file>widgets/WeatherStrip/arrow.png</file>
+        <file>widgets/WeatherStrip/cloud01.png</file>
+        <file>widgets/WeatherStrip/cloud02.png</file>
+        <file>widgets/WeatherStrip/cloud03.png</file>
+        <file>widgets/WeatherStrip/earth.png</file>
+        <file>widgets/WeatherStrip/moon.png</file>
+        <file>widgets/WeatherStrip/rain01.png</file>
+        <file>widgets/WeatherStrip/rain02.png</file>
+        <file>widgets/WeatherStrip/rain03.png</file>
+        <file>widgets/WeatherStrip/snow.png</file>
+        <file>widgets/WeatherStrip/sun01.png</file>
+        <file>widgets/WeatherStrip/sun02.png</file>
+        <file>widgets/WeatherStrip/sun03.png</file>
+        <file>widgets/WeatherStrip/thunderstorm01.png</file>
+        <file>widgets/WeatherStrip/thunderstorm02.png</file>
+        <file>widgets/WeatherStrip/WeatherStrip.qml</file>
+        <file>widgets/WeatherStrip/WeatherSegment.qml</file>
+        <file>widgets/WeatherStrip/widget_base_back.png</file>
+        <file>widgets/WeatherStrip/IconSun.qml</file>
+        <file>widgets/WeatherStrip/IconCloud.qml</file>
+        <file>widgets/WeatherStrip/IconThunder.qml</file>
+        <file>widgets/WeatherStrip/IconSnow.qml</file>
+        <file>widgets/WeatherStrip/IconRain.qml</file>
+        <file>widgets/WeatherStrip/IconSpecial.qml</file>
+        <file>widgets/WeatherStrip/fog.png</file>
     </qresource>
 </RCC>
