@@ -12,7 +12,8 @@ Item {
     property double averageValue: 0
     property variant chartData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     
-    width: 400
+//    width: 400
+    width: 1000
     height: 300
     property size minimumSize: Qt.size(width, height)
     property size maximumSize: Qt.size(width, height)
