@@ -70,14 +70,20 @@ Item {
             top: parent.top; topMargin: Units.dp(24)
             left: parent.left; leftMargin: Units.dp(44)
         }
-        width: Units.dp(36)
-        height: Units.dp(36)
+        width: Units.dp(48)
+        height: Units.dp(48)
         opacity: 0.65
 
         MouseArea {
             anchors.fill: parent
             anchors.margins: Units.dp(-5)
-            onClicked: settingsClicked()
+            // onClicked: settingsClicked()
+            onClicked:  AppActions.openKeyboard(qsTr("Note"),
+                           qsTr("Write your note to be displayed on the desktop"),
+                           noteText,
+                           true,
+                           ActionTypes.changeNoteText,
+                           { uuid: widgetModel.uuid })
         }
     }
 }
