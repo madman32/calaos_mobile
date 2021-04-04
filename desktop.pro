@@ -14,7 +14,7 @@ include(lang/lang.pri)
 
 TARGET=calaos_home
 
-QT += widgets
+QT += widgets mqtt
 
 qtHaveModule(webengine) {
 QT += webengine
@@ -35,14 +35,16 @@ SOURCES += src/HardwareUtils_desktop.cpp \
     src/WeatherInfo.cpp \
     src/XUtils.cpp \
     src/ScreenManager.cpp \
-    src/UserInfoModel.cpp
+    src/UserInfoModel.cpp \
+    src/qmlmqttclient.cpp
 HEADERS += src/HardwareUtils_desktop.h \
     src/CalaosWidget.h \
     src/CalaosWidgetModel.h \
     src/WeatherInfo.h \
     src/XUtils.h \
     src/ScreenManager.h \
-    src/UserInfoModel.h
+    src/UserInfoModel.h \
+    src/qmlmqttclient.h
 
 RESOURCES += qml_desktop.qrc \
     img_desktop.qrc \

@@ -4,6 +4,11 @@
 #ifdef HAVE_WEBENGINE
 #include <QtWebEngine>
 #endif
+#if defined(CALAOS_DESKTOP)
+#include "qmlmqttclient.h"
+#include <QGuiApplication>
+#include <QLoggingCategory>
+#endif
 
 int main(int argc, char *argv[])
 {
@@ -33,7 +38,10 @@ int main(int argc, char *argv[])
 
     //init platform code after QApp is created and initialized
     HardwareUtils::Instance()->platformInit(app.getEngine());
-
+#if defined(CALAOS_DESKTOP)
+        qmlRegisterType<QmlMqttClient>("MqttClient", 1, 0, "MqttClient");
+        qmlRegisterUncreatableType<QmlMqttSubscription>("MqttClient", 1, 0, "MqttSubscription", QLatin1String("Subscriptions are read-only"));
+#endif
     //QML app creation needs to be created after platform init is done
     app.createQmlApp();
 
