@@ -1,11 +1,10 @@
 import QtQuick 2.0
 import QtCharts 2.3
 import SharedComponents 1.0
+import MqttClient 1.0
+
 
 Item {
-
-    property variant widgetModel
-    property variant modelData
     id: graphWidget
     
     property double count: 0
@@ -18,6 +17,12 @@ Item {
     property size minimumSize: Qt.size(width, height)
     property size maximumSize: Qt.size(width, height)
    
+    MqttClient {
+        id: client
+        hostname: "192.168.1.38"
+        port: 1883
+    }
+
     function updateGraph() {
         var maxValue = 0;
         for (var i = chartData.length - 1; i > 0 ; i--){
@@ -42,15 +47,22 @@ Item {
         axisY.max = maxValue + 1;
     }
     
-    function averageTime() {
+    function requestData(){
+        client.connectToHost()
+        tempSubscription = client.subscribe("/brians-lab/sensors/temperature")
+        tempSubscription.messageReceived.connect(averageTime)
+    }
+    
+    function averageTime(payload) {
         count = count + 1;
-        averageValue = averageValue + modelData.stateInt;
+        averageValue = averageValue + payload["temp"];
+        client.disconnectFromHost()
     }
 
     Timer {
         //update every 10 second
         interval: 10000; running: true; repeat: true;
-        onTriggered: graphWidget.averageTime()
+        onTriggered: graphWidget.requestData()
         triggeredOnStart: true
     }
     
