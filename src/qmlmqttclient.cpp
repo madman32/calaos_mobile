@@ -1,21 +1,56 @@
 #include "qmlmqttclient.h"
 #include <QDebug>
 
-QmlMqttClient::QmlMqttClient(QObject *parent)
+#include <unistd.h>
+
+/*QmlMqttClient::QmlMqttClient(QObject *parent)
     : QMqttClient(parent)
 {
+}*/
+QmlMqttClient::QmlMqttClient(QObject *parent)
+    : QObject(parent)
+    , m_hostname("192.168.1.38")
+    , m_port(1883)
+{
+    m_client = QSharedPointer<QMqttClient>(new QMqttClient);
+}
+
+void QmlMqttClient::connectToHost()
+{
+    m_client->setHostname(m_hostname);
+    m_client->setPort(m_port);
+    m_client->connectToHost();
+    int count = 0;
+    while (m_client->state() != QMqttClient::ClientState::Connected)
+    {
+        usleep(1000);
+        count ++;
+        if (count > 10000)
+        {
+            qWarning() << "Unable to connect to MQTT socket within 10 sec";
+            break;
+        }
+    }
+}
+
+void QmlMqttClient::disconnectFromHost()
+{
+    m_client->disconnectFromHost();
 }
 
 QmlMqttSubscription* QmlMqttClient::subscribe(const QString &topic)
 {
-    auto sub = QMqttClient::subscribe(topic, 0);
-    auto result = new QmlMqttSubscription(sub, this);
+    auto sub = m_client->subscribe(topic, 0);
+    if (!sub)
+    {
+        qWarning() << "Sub is null about to crash";
+    }
+    auto result = new QmlMqttSubscription(sub);
     return result;
 }
 
-QmlMqttSubscription::QmlMqttSubscription(QMqttSubscription *s, QmlMqttClient *c)
+QmlMqttSubscription::QmlMqttSubscription(QMqttSubscription *s)
     : sub(s)
-    , client(c)
 {
     connect(sub, &QMqttSubscription::messageReceived, this, &QmlMqttSubscription::handleMessage);
     m_topic = sub->topic();

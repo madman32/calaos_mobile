@@ -5,11 +5,15 @@ import MqttClient 1.0
 
 
 Item {
+    property variant widgetModel
+
     id: graphWidget
     
     property double count: 0
     property double averageValue: 0
     property variant chartData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    
+    property var tempSubscription: 0
     
 //    width: 400
     width: 1000
@@ -57,6 +61,8 @@ Item {
         count = count + 1;
         averageValue = averageValue + payload["temp"];
         client.disconnectFromHost()
+        tempSubscription.destroy()
+        tempSubscription = 0
     }
 
     Timer {
