@@ -86,6 +86,7 @@ public:
     QmlMqttClient(QObject *parent = nullptr);
 
     Q_INVOKABLE QmlMqttSubscription *subscribe(const QString &topic);
+    Q_INVOKABLE void unsubscribe(const QString &topic);
 private:
     Q_DISABLE_COPY(QmlMqttClient)
 };

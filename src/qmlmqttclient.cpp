@@ -63,6 +63,11 @@ QmlMqttSubscription* QmlMqttClient::subscribe(const QString &topic)
     return result;
 }
 
+void QmlMqttClient::unsubscribe(const QString &topic)
+{
+    QMqttClient::unsubscribe(topic);
+}
+
 QmlMqttSubscription::QmlMqttSubscription(QMqttSubscription *s, QmlMqttClient *c)
     : sub(s)
     , client(c)

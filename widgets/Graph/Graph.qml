@@ -1,5 +1,7 @@
-import QtQuick 2.0
+import QtQuick 2.8
 import QtCharts 2.3
+import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.1
 import SharedComponents 1.0
 import MqttClient 1.0
 
@@ -12,6 +14,7 @@ Item {
     property double count: 0
     property double averageValue: 0
     property variant chartData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    property var dataSource: "brians-lab/sensors/temperature"
     
     property var tempSubscription: 0
     
@@ -23,11 +26,27 @@ Item {
    
     MqttClient {
         id: client
-        hostname: "localhost"
-        port: 1883
+        hostname: "192.168.1.38"
+        port: portField.text
+    }
+
+
+    GridLayout {
+        anchors.fill: parent
+        anchors.margins: 10
+        columns: 2
+        TextField {
+            id: portField
+            Layout.fillWidth: true
+            text: "1883"
+            placeholderText: "<Port>"
+            inputMethodHints: Qt.ImhDigitsOnly
+            enabled: false
+        }
     }
 
     function updateGraph() {
+        console.log("Updating Graph")
         var maxValue = 0;
         for (var i = chartData.length - 1; i > 0 ; i--){
             dataSeries.replace(0 - i, chartData[i], 0 - i, chartData[i - 1]);
@@ -39,9 +58,17 @@ Item {
         }
         if (count > 0)
         {
+            console.log("average ", averageValue);
+            console.log("count ", count);
+            
             chartData[0] = averageValue/count;
             averageValue = 0;
             count = 0;
+            console.log("chart data 0 set as ", chartData[0]);
+        }
+        else
+        {    
+            console.log("Count was 0")
         }
         dataSeries.replace(0, chartData[1], 0, chartData[0]);
         if (chartData[0] > maxValue)
@@ -52,9 +79,13 @@ Item {
     }
     
     function requestData(){
-        if (client.state === MqttClient.Connected) {
-            tempSubscription = client.subscribe("/brians-lab/sensors/temperature")
+        if (client.state === MqttClient.Connected && ! tempSubscription) {
+            tempSubscription = client.subscribe(dataSource)
             tempSubscription.messageReceived.connect(averageTime)
+            console.log("Subscribing")
+        }
+        else if (tempSubscription){
+            console.log("Previous subscription not cleared yet")
         }
         else {
             console.log("Connecting to the host")
@@ -64,8 +95,11 @@ Item {
     
     function averageTime(payload) {
         count = count + 1;
-        averageValue = averageValue + payload["temp"];
-        client.unsubscribe("/brians-lab/sensors/temperature")
+        console.log("UnSubscribing")
+        var msg = JSON.parse(payload);
+        averageValue = averageValue + msg["temp"];
+        
+        client.unsubscribe(dataSource)
         tempSubscription.destroy()
         tempSubscription = 0
     }

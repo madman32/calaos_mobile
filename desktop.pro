@@ -14,7 +14,8 @@ include(lang/lang.pri)
 
 TARGET=calaos_home
 
-QT += widgets mqtt
+QT += widgets quick mqtt
+CONFIG += c++11
 
 qtHaveModule(webengine) {
 QT += webengine
