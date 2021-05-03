@@ -40,9 +40,14 @@ void QmlMqttClient::disconnectFromHost()
 
 QmlMqttSubscription* QmlMqttClient::subscribe(const QString &topic)
 {
-    auto sub = m_client->subscribe(topic, 0);
+    QMqttTopicFilter f(topic);
+    auto sub = m_client->subscribe(f);
     if (!sub)
     {
+        qWarning() << "topic is " << topic;
+        if (!f.isValid()) {
+            qWarning() << "Invalid subscription topic filter";
+        }
         qWarning() << "Sub is null about to crash";
     }
     auto result = new QmlMqttSubscription(sub);

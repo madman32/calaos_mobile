@@ -23,7 +23,7 @@ Item {
    
     MqttClient {
         id: client
-        hostname: "192.168.1.38"
+        hostname: "localhost"
         port: 1883
     }
 
@@ -52,15 +52,20 @@ Item {
     }
     
     function requestData(){
-        client.connectToHost()
-        tempSubscription = client.subscribe("/brians-lab/sensors/temperature")
-        tempSubscription.messageReceived.connect(averageTime)
+        if (client.state === MqttClient.Connected) {
+            tempSubscription = client.subscribe("/brians-lab/sensors/temperature")
+            tempSubscription.messageReceived.connect(averageTime)
+        }
+        else {
+            console.log("Connecting to the host")
+            client.connectToHost()
+        }
     }
     
     function averageTime(payload) {
         count = count + 1;
         averageValue = averageValue + payload["temp"];
-        client.disconnectFromHost()
+        client.unsubscribe("/brians-lab/sensors/temperature")
         tempSubscription.destroy()
         tempSubscription = 0
     }
